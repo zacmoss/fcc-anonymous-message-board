@@ -25,6 +25,8 @@ app.use(helmet.frameguard({ action: 'sameorigin' }));
 // dns prefetching off
 app.use(helmet.dnsPrefetchControl());
 
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
+
 //Sample front-end
 app.route('/b/:board/')
   .get(function (req, res) {
