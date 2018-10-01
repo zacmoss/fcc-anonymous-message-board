@@ -10,6 +10,9 @@
 
 // notes board[0] will contain board id and delete_password for whole board
 
+// above incorrect, I believe database must be three deep now
+// board -> 
+
 const expect = require('chai').expect;
 const MongoClient = require('mongodb').MongoClient;
 
@@ -17,6 +20,7 @@ const CONNECTION_STRING = process.env.DB;
 
 module.exports = function (app) {
   
+  // THREADS
   // GET thread
   
   app.route('/api/threads/:board')
@@ -69,16 +73,20 @@ module.exports = function (app) {
   
   // DELETE
     
+  
+  // REPLIES
+  // I think :board here should be :thread???
+  // Full replies for threads are at /b/:board/:thread_id
   app.route('/api/replies/:board')
   
   // GET
   .get(function(res, req) {
-    let messageBoard = req.params.board;
+    let thread = req.params.board;
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
         let dbo = db.db("fcc-cert6-project5");
-        if (dbo.collection(messageBoard)) {
-          let collection = dbo.collection(messageBoard);
+        if (dbo.collection(thread)) {
+          let collection = dbo.collection(thread);
           collection.find().toArray(function(err, result) {
           res.send(result);
         });
@@ -102,8 +110,7 @@ module.exports = function (app) {
       delete_password: delete_password,
       created_on: new Date(),
       bumped_on: new Date(),
-      reported: false,
-      replies: []
+      reported: false
     }
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
