@@ -8,7 +8,7 @@
 
 'use strict';
 
-// notes board[0] will contain board id and delete_password for whole board
+// notes req.params.board is cutting off last letter...why???
 
 // above incorrect, I believe database must be three deep now
 // board -> thread array -> replies array in each thread
@@ -35,6 +35,7 @@ module.exports = function (app) {
           res.send(result);
           console.log(result);
           console.log(req.params.board);
+          console.log(messageBoard);
         });
         } else {
           res.send({error: 'No board under that name exists'});
