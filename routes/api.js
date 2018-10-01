@@ -11,7 +11,7 @@
 // notes board[0] will contain board id and delete_password for whole board
 
 // above incorrect, I believe database must be three deep now
-// board -> 
+// board -> thread array -> replies array in each thread
 
 const expect = require('chai').expect;
 const MongoClient = require('mongodb').MongoClient;
@@ -20,7 +20,7 @@ const CONNECTION_STRING = process.env.DB;
 
 module.exports = function (app) {
   
-  // THREADS
+  // Board with threads
   // GET thread
   
   app.route('/api/threads/:board')
@@ -44,12 +44,13 @@ module.exports = function (app) {
   
   // POST
   
-  // works
+  // post new thread
   .post(function(req, res) {
     let messageBoard = req.params.board;
     let board = req.body.board;
     let text = req.body.text;
     let delete_password = req.body.delete_password;
+    // board object
     let dataObject = {
       text: text,
       delete_password: delete_password,
@@ -61,9 +62,12 @@ module.exports = function (app) {
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
-      if (!dbo.collection(messageBoard)) dbo.createCollection(messageBoard);
-      let collection = dbo.collection(messageBoard);
-      collection.insertOne(dataObject);
+      if (!dbo.collection(board)) {
+        dbo.createCollection(board);
+      } else 
+      let collection = dbo.collection(board);
+      //collection.insertOne(dataObject);
+      // push new dataObject to board.threads
       res.redirect('/b/' + messageBoard);
     });
     
