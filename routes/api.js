@@ -20,11 +20,22 @@ module.exports = function (app) {
   app.route('/api/threads/:board')
     .get(function(req, res) {
       let messageBoard = req.params.board;
+    
+      MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
+        let dbo = db.db("fcc-cert6-project5");
+        if (dbo.collection(messageBoard)) {
+          let collection = dbo.collection(messageBoard);
+        } else {
+          res.send({error: 'No board under that name exists'});
+        }
+      });
+                  
 
       /*
       MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
                   let dbo = db.db("fcc-cert6-project5");
-                  let collection = dbo.collection('messageBoard');
+                  if (!dbo.collection(messageBoard)) dbo.createCollection(messageBoard);
+                  let collection = dbo.collection(messageBoard);
                   collection.insertOne({key: 'value test'});
       });
       */
