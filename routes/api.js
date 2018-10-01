@@ -25,6 +25,9 @@ module.exports = function (app) {
         let dbo = db.db("fcc-cert6-project5");
         if (dbo.collection(messageBoard)) {
           let collection = dbo.collection(messageBoard);
+          collection.find().toArray(function(err, result) {
+          res.send(result);
+        });
         } else {
           res.send({error: 'No board under that name exists'});
         }
@@ -43,10 +46,8 @@ module.exports = function (app) {
   
   
   // POST
-  // post text and delete_password
   
-  // board text delete_password
-  
+  // works
   .post(function(req, res) {
     let messageBoard = req.params.board;
     let board = req.body.board;
@@ -66,15 +67,12 @@ module.exports = function (app) {
       if (!dbo.collection(messageBoard)) dbo.createCollection(messageBoard);
       let collection = dbo.collection(messageBoard);
       collection.insertOne(dataObject);
+      res.redirect('/api/b/' + messageBoard);
     });
     
   })
   
-  
-  
   // res.redirect to /b/{board}
-  // save _id, text, created_on(date&time), bumped_on(date&time, starts same as created_on),
-  // reported(boolean), delete_password, replies(array)
   
   // PUT
   
