@@ -15,15 +15,20 @@ const CONNECTION_STRING = process.env.DB;
 
 module.exports = function (app) {
   
-  app.route('/api/threads/:board');
-  
-  MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
-              let dbo = db.db("fcc-cert6-project5");
-              let collection = dbo.collection('messageBoard');
-              collection.insertOne({key: 'value test'});
-  });
-  
   // GET thread
+  
+  app.route('/api/threads/:board')
+    .get(function(req, res) {
+      let messageBoard = req.params.board;
+
+      /*
+      MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
+                  let dbo = db.db("fcc-cert6-project5");
+                  let collection = dbo.collection('messageBoard');
+                  collection.insertOne({key: 'value test'});
+      });
+      */
+    });
   
   
   // POST
