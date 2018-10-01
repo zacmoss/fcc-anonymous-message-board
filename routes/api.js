@@ -64,11 +64,14 @@ module.exports = function (app) {
       let dbo = db.db("fcc-cert6-project5");
       if (!dbo.collection(board)) {
         dbo.createCollection(board);
-      } else 
+        // insert a boardObject with threads array
+        // no need for delete password for boardObject
+      } else {
       let collection = dbo.collection(board);
       //collection.insertOne(dataObject);
       // push new dataObject to board.threads
       res.redirect('/b/' + messageBoard);
+      }
     });
     
   })
