@@ -33,6 +33,8 @@ module.exports = function (app) {
           let collection = dbo.collection(messageBoard);
           collection.find().toArray(function(err, result) {
           res.send(result);
+          console.log(result);
+          console.log(req.params.board);
         });
         } else {
           res.send({error: 'No board under that name exists'});
@@ -45,13 +47,14 @@ module.exports = function (app) {
   // POST
   
   // post new thread
+  // create new board if board didn't exist prior
   .post(function(req, res) {
     let messageBoard = req.params.board;
     let board = req.body.board;
     let text = req.body.text;
     let delete_password = req.body.delete_password;
-    // board object
-    let dataObject = {
+    // thread object
+    let threadObject = {
       text: text,
       delete_password: delete_password,
       created_on: new Date(),
@@ -64,12 +67,12 @@ module.exports = function (app) {
       let dbo = db.db("fcc-cert6-project5");
       if (!dbo.collection(board)) {
         dbo.createCollection(board);
-        // insert a boardObject with threads array
-        // no need for delete password for boardObject
+        let collection = dbo.collection(board);
+        collection.insertOne(threadObject);
+        res.redirect('/b/' + messageBoard);
       } else {
       let collection = dbo.collection(board);
-      //collection.insertOne(dataObject);
-      // push new dataObject to board.threads
+      collection.insertOne(threadObject);
       res.redirect('/b/' + messageBoard);
       }
     });
