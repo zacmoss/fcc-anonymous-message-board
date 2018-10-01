@@ -63,6 +63,8 @@ module.exports = function (app) {
       reported: false,
       replies: []
     }
+    console.log('post to - ' + board);
+    console.log('text: ' + text);
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
@@ -70,11 +72,11 @@ module.exports = function (app) {
         dbo.createCollection(board);
         let collection = dbo.collection(board);
         collection.insertOne(threadObject);
-        res.redirect('/b/' + messageBoard);
+        res.redirect('/b/' + board);
       } else {
       let collection = dbo.collection(board);
       collection.insertOne(threadObject);
-      res.redirect('/b/' + messageBoard);
+      res.redirect('/b/' + board);
       }
     });
     
