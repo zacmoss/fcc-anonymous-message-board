@@ -28,10 +28,10 @@ app.use(helmet.dnsPrefetchControl());
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 
 //Sample front-end
-app.route('/b/:board')
+app.route('/b/:board/')
   .get(function (req, res) {
-    //console.log('get request: ');
-    //console.log(req);
+    console.log('get request: ');
+    console.log(req.params);
     res.sendFile(process.cwd() + '/views/board.html');
   });
 app.route('/b/:board/:threadid')
