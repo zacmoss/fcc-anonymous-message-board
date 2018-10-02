@@ -142,7 +142,9 @@ module.exports = function (app) {
         let collection = dbo.collection(board);
         collection.findOne({_id: ObjectId(thread)}, function(err, result) {
           //if (err) res.send({error: 'No thread exists under that id'});
-          if (err) console.log('error');
+          //if (err) res.send({error: 'No thread exists under that id'});
+          //console.log(result.lastErrorObject);
+          if (result) {
           collection.findOneAndUpdate(
             {_id: ObjectId(thread)},
             { $addToSet: {replies: dataObject} },
@@ -151,6 +153,8 @@ module.exports = function (app) {
               res.send(result);
             }
           );
+          } else {
+            res.send(
           //res.redirect('/b/' + board + threadId);
         });
         
