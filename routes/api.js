@@ -18,6 +18,9 @@
 const expect = require('chai').expect;
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
+var mongoose = require('mongoose');
+Promise = require('bluebird');
+mongoose.Promise = Promise;
 
 const CONNECTION_STRING = process.env.DB;
 
@@ -137,18 +140,22 @@ module.exports = function (app) {
       let dbo = db.db("fcc-cert6-project5");
       if (dbo.collection(board)) {
         let collection = dbo.collection(board);
-        collection.findOneAndUpdate(
-          {_id: ObjectId(thread)},
-          { $addToSet: {replies: dataObject} },
-          {new: true},
-          function(err, result) {
-            console.log(result);
-            res.send(result);
-          }
-        );
-        //res.redirect('/b/' + board + threadId);
+        collection.findOne({_id: ObjectId(thread)}, function(err, result) {
+          //if (err) res.send({error: 'No thread exists under that id'});
+          if (err) console.log('error');
+          collection.findOneAndUpdate(
+            {_id: ObjectId(thread)},
+            { $addToSet: {replies: dataObject} },
+            function(err, result) {
+              console.log(result);
+              res.send(result);
+            }
+          );
+          //res.redirect('/b/' + board + threadId);
+        });
+        
       } else {
-        res.json({error: 'No thread exists under that name'});
+        res.json({error: 'No board exists under that name'});
       }
     });
     
