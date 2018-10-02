@@ -25,7 +25,7 @@ module.exports = function (app) {
   
   app.route('/api/threads/:board')
     .get(function(req, res) {
-      let messageBoard = req.params.board;
+      let messageBoard = req.params.board; // b/c the last letter is getting cut off somewhere in fCC origin code
       console.log('req.params.board at api get');
       console.log(req.url);
       console.log(messageBoard);
