@@ -98,6 +98,7 @@ module.exports = function (app) {
   // GET
   .get(function(req, res) {
     // /api/replies/<board>?thread_id=<thread>
+    // test url --- /api/replies/FF8?thread_id=5bb3a3b7e7c0260fcc5b17be
     let board = req.params.board;
     let thread = req.query.thread_id;
     
@@ -107,7 +108,10 @@ module.exports = function (app) {
           let collection = dbo.collection(board);
           collection.findOne({_id: ObjectId(thread)}, function(err, result) {
             if (result) {
-              collection.find({_id: ObjectId(thread)}).toArray
+              collection.find({_id: ObjectId(thread)}).toArray(function(err, result) {
+                res.send(result);
+                //res.send({success: 'works'});
+              }) 
             } else {
               res.send({error: 'No thread under that id exists'});
             }
