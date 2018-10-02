@@ -26,7 +26,9 @@ module.exports = function (app) {
   app.route('/api/threads/:board')
     .get(function(req, res) {
       let messageBoard = req.params.board;
-    
+      console.log('req.params.board at api get');
+      console.log(req.url);
+      console.log(messageBoard);
       MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
         let dbo = db.db("fcc-cert6-project5");
         if (dbo.collection(messageBoard)) {
