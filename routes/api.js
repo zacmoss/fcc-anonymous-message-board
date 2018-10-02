@@ -97,15 +97,23 @@ module.exports = function (app) {
   
   // GET
   .get(function(req, res) {
-    let thread = req.params.board;
+    // /api/replies/<board>?thread_id=<thread>
+    let board = req.params.board;
+    let thread = req.query.thread_id;
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
         let dbo = db.db("fcc-cert6-project5");
-        if (dbo.collection(thread)) {
-          let collection = dbo.collection(thread);
-          collection.find().toArray(function(err, result) {
-          res.send(result);
-        });
+        if (dbo.collection(board)) {
+          let collection = dbo.collection(board);
+          collection.findOne({_id: ObjectId(thread)}, function(err, result) {
+            if (result) {
+              collection.find({_id: ObjectId(thread)}).toArray
+            } else {
+              res.send({error: 'No thread under that id exists'});
+            }
+          });
+          //collection.find().toArray(function(err, result) {
+          //});
         } else {
           res.send({error: 'No board under that name exists'});
         }
@@ -151,11 +159,12 @@ module.exports = function (app) {
             function(err, result) {
               console.log(result);
               res.send(result);
+              //res.redirect('/b/' + board + threadId);
             }
           );
           } else {
-            res.send(
-          //res.redirect('/b/' + board + threadId);
+            res.send({error: 'No thread exists under that id'});
+          }
         });
         
       } else {
