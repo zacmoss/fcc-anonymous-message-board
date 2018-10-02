@@ -38,8 +38,9 @@ module.exports = function (app) {
         let dbo = db.db("fcc-cert6-project5");
         if (dbo.collection(messageBoard)) {
           let collection = dbo.collection(messageBoard);
-          collection.find().toArray(function(err, result) {
-          res.send(result);
+          collection.find().limit(10).toArray(function(err, result) {
+            console.log(result);
+            res.send(result);
         });
         } else {
           res.send({error: 'No board under that name exists'});
