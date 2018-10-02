@@ -93,7 +93,7 @@ module.exports = function (app) {
   app.route('/api/replies/:board')
   
   // GET
-  .get(function(res, req) {
+  .get(function(req, res) {
     let thread = req.params.board;
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
@@ -112,14 +112,15 @@ module.exports = function (app) {
   
   // POST
   // board thread_id text delete_password
-  .post(function(res, req) {
+  .post(function(req, res) {
     let messageBoard = req.params.board;
-    //let board = req.body.board;
+    let board = req.body.board;
     let thread = req.body.thread_id
     let text = req.body.text;
     let delete_password = req.body.delete_password;
-    //console.log('board: ' + board);
-    //console.log('thread: ' + thread);
+    console.log('board: ' + board);
+    console.log('thread: ' + thread);
+    
     
     let dataObject = {
       text: text,
@@ -128,16 +129,18 @@ module.exports = function (app) {
       reported: false
     }
     
+    
     // update thread's bumped on date
     // create new reply dataObject in thread's replies array
-    /*
+    
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
       if (dbo.collection(board)) {
         let collection = dbo.collection(board);
         collection.findOneAndUpdate(
           {_id: ObjectId(thread)},
-          { $addToSet: dataObject },
+          { $addToSet: {replies: dataObject} },
+          {new: true},
           function(err, result) {
             console.log(result);
             res.send(result);
@@ -148,7 +151,7 @@ module.exports = function (app) {
         res.json({error: 'No thread exists under that name'});
       }
     });
-    */
+    
   })
   
   // PUT
