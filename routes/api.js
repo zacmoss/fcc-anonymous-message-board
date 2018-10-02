@@ -17,6 +17,7 @@
 
 const expect = require('chai').expect;
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 
 const CONNECTION_STRING = process.env.DB;
 
@@ -113,9 +114,12 @@ module.exports = function (app) {
   // board thread_id text delete_password
   .post(function(res, req) {
     let messageBoard = req.params.board;
-    let board = req.body.board;
+    //let board = req.body.board;
+    let thread = req.body.thread_id
     let text = req.body.text;
     let delete_password = req.body.delete_password;
+    //console.log('board: ' + board);
+    //console.log('thread: ' + thread);
     
     let dataObject = {
       text: text,
@@ -126,17 +130,25 @@ module.exports = function (app) {
     
     // update thread's bumped on date
     // create new reply dataObject in thread's replies array
+    /*
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
       if (dbo.collection(board)) {
-        let collection = dbo.collection(messageBoard);
-        collection.insertOne(dataObject);
+        let collection = dbo.collection(board);
+        collection.findOneAndUpdate(
+          {_id: ObjectId(thread)},
+          { $addToSet: dataObject },
+          function(err, result) {
+            console.log(result);
+            res.send(result);
+          }
+        );
         //res.redirect('/b/' + board + threadId);
       } else {
         res.json({error: 'No thread exists under that name'});
       }
     });
-    
+    */
   })
   
   // PUT
