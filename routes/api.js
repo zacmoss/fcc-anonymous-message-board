@@ -68,7 +68,8 @@ module.exports = function (app) {
       created_on: new Date(),
       bumped_on: new Date(),
       reported: false,
-      replies: []
+      replies: [],
+      replycount: 0
     }
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
@@ -110,6 +111,7 @@ module.exports = function (app) {
           collection.findOne({_id: ObjectId(thread)}, function(err, result) {
             if (result) {
               collection.find({_id: ObjectId(thread)}).toArray(function(err, result) {
+                
                 res.send(result);
                 //res.send({success: 'works'});
               }) 
@@ -127,6 +129,7 @@ module.exports = function (app) {
   })
   
   // POST
+  // post reply
   // board thread_id text delete_password
   .post(function(req, res) {
     let messageBoard = req.params.board;
@@ -160,7 +163,7 @@ module.exports = function (app) {
           if (result) {
           collection.findOneAndUpdate(
             {_id: ObjectId(thread)},
-            { $addToSet: {replies: dataObject} },
+            { $addToSet: {replies: dataObject}, $inc: {replycount: 1} },
             function(err, result) {
               console.log(result);
               res.send(result);
