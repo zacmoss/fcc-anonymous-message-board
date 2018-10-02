@@ -25,21 +25,17 @@ module.exports = function (app) {
   // Board with threads
   // GET thread
   
+  // works
   app.route('/api/threads/:board')
     .get(function(req, res) {
       let messageBoard = req.params.board;
-      console.log('req.params.board at api get');
-      console.log(req.url);
-      console.log(messageBoard);
+
       MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
         let dbo = db.db("fcc-cert6-project5");
         if (dbo.collection(messageBoard)) {
           let collection = dbo.collection(messageBoard);
           collection.find().toArray(function(err, result) {
           res.send(result);
-          console.log(result);
-          console.log(req.params.board);
-          console.log(messageBoard);
         });
         } else {
           res.send({error: 'No board under that name exists'});
@@ -53,6 +49,8 @@ module.exports = function (app) {
   
   // post new thread
   // create new board if board didn't exist prior
+  
+  // works
   .post(function(req, res) {
     let messageBoard = req.params.board;
     let board = req.body.board;
@@ -67,8 +65,6 @@ module.exports = function (app) {
       reported: false,
       replies: []
     }
-    console.log('post to - ' + board);
-    console.log('text: ' + text);
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
@@ -92,7 +88,6 @@ module.exports = function (app) {
     
   
   // REPLIES
-  // I think :board here should be :thread???
   // Full replies for threads are at /b/:board/:thread_id
   app.route('/api/replies/:board')
   
@@ -126,16 +121,20 @@ module.exports = function (app) {
       text: text,
       delete_password: delete_password,
       created_on: new Date(),
-      bumped_on: new Date(),
       reported: false
     }
     
+    // update thread's bumped on date
+    // create new reply dataObject in thread's replies array
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
-      if (!dbo.collection(messageBoard)) dbo.createCollection(messageBoard);
-      let collection = dbo.collection(messageBoard);
-      collection.insertOne(dataObject);
-      res.redirect('/b/' + messageBoard);
+      if (dbo.collection(board)) {
+        let collection = dbo.collection(messageBoard);
+        collection.insertOne(dataObject);
+        //res.redirect('/b/' + board + threadId);
+      } else {
+        res.json({error: 'No thread exists under that name'});
+      }
     });
     
   })
