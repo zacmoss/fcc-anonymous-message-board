@@ -9,6 +9,8 @@
 'use strict';
 
 // notes req.params.board is cutting off last letter...why???
+// solved: board.html grabs board by slicing url and cuts last item assuming it a /
+// so we had to add a / on the redirect to the server on post
 
 // above incorrect, I believe database must be three deep now
 // board -> thread array -> replies array in each thread
@@ -25,7 +27,7 @@ module.exports = function (app) {
   
   app.route('/api/threads/:board')
     .get(function(req, res) {
-      let messageBoard = req.params.board; // b/c the last letter is getting cut off somewhere in fCC origin code
+      let messageBoard = req.params.board;
       console.log('req.params.board at api get');
       console.log(req.url);
       console.log(messageBoard);
@@ -74,11 +76,11 @@ module.exports = function (app) {
         dbo.createCollection(board);
         let collection = dbo.collection(board);
         collection.insertOne(threadObject);
-        res.redirect('/b/' + board);
+        res.redirect('/b/' + board + '/'); // b/c board.html is grabbing the board by slicing off last item
       } else {
       let collection = dbo.collection(board);
       collection.insertOne(threadObject);
-      res.redirect('/b/' + board);
+      res.redirect('/b/' + board + '/'); // b/c board.html is grabbing the board by slicing off last item
       }
     });
     
