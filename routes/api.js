@@ -130,18 +130,15 @@ module.exports = function (app) {
     });
   })
   
+  // works
   // POST
-  // post reply
-  // board thread_id text delete_password
+  // only used on home page
   .post(function(req, res) {
     let messageBoard = req.params.board;
     let board = req.body.board;
     let thread = req.body.thread_id
     let text = req.body.text;
     let delete_password = req.body.delete_password;
-    console.log('board: ' + board);
-    console.log('thread: ' + thread);
-    
     
     let dataObject = {
       text: text,
@@ -149,7 +146,6 @@ module.exports = function (app) {
       created_on: new Date(),
       reported: false
     }
-    
     
     // update thread's bumped on date
     // create new reply dataObject in thread's replies array
@@ -159,9 +155,7 @@ module.exports = function (app) {
       if (dbo.collection(board)) {
         let collection = dbo.collection(board);
         collection.findOne({_id: ObjectId(thread)}, function(err, result) {
-          //if (err) res.send({error: 'No thread exists under that id'});
-          //if (err) res.send({error: 'No thread exists under that id'});
-          //console.log(result.lastErrorObject);
+          
           if (result) {
           collection.findOneAndUpdate(
             {_id: ObjectId(thread)},
@@ -169,19 +163,16 @@ module.exports = function (app) {
             function(err, result) {
               console.log(result);
               res.send(result);
-              //res.redirect('/b/' + board + threadId);
             }
           );
           } else {
             res.send({error: 'No thread exists under that id'});
           }
         });
-        
       } else {
         res.json({error: 'No board exists under that name'});
       }
     });
-    
   })
   
   // PUT
