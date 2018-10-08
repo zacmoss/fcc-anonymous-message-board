@@ -24,10 +24,10 @@
             crossorigin="anonymous"></script>
     <script>
       $(function() {
-        console.log('test below');
-        console.log(window.location.pathname);
+        
         var currentURL = window.location.pathname.slice(3);
         currentURL = currentURL.split('/');
+        // currentURL is now an array with [<thread>, <threadid>]
         
         var url = "/api/replies/"+currentURL[0];
         $('#threadTitle').text(window.location.pathname);
@@ -38,6 +38,10 @@
           success: function(ele)
           {
             var boardThreads= [];
+            console.log('test below');
+            console.log(window.location.pathname);
+            console.log(currentURL);
+            console.log(ele[0].text);
             //
             // THIS ARRAY SET UP IS FOR CODE READABILITIES AND TESTING!
             // THIS IS NOT WHAT IT WOULD LOOK LIKE TO GO LIVE
