@@ -135,11 +135,12 @@ module.exports = function (app) {
   // only used on home page
   .post(function(req, res) {
     let messageBoard = req.params.board;
-    let board = req.body.board;
+    //let board = req.body.board;
     let thread = req.body.thread_id
     let text = req.body.text;
     let delete_password = req.body.delete_password;
-    
+    console.log('board');
+    console.log(board);
     let dataObject = {
       text: text,
       delete_password: delete_password,
