@@ -110,11 +110,15 @@ module.exports = function (app) {
           let collection = dbo.collection(board);
           collection.findOne({_id: ObjectId(thread)}, function(err, result) {
             if (result) {
-              collection.find({_id: ObjectId(thread)}).toArray(function(err, result) {
+              /*collection.find({_id: ObjectId(thread)}).toArray(function(err, result) {
                 
                 res.send(result);
                 //res.send({success: 'works'});
               }) 
+              */
+              collection.find({_id: ObjectId(thread)}, function(err, result) {
+                res.send(result);
+              })
             } else {
               res.send({error: 'No thread under that id exists'});
             }
