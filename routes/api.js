@@ -94,9 +94,10 @@ module.exports = function (app) {
     
   
   // REPLIES
-  // Full replies for threads are at /b/:board/:thread_id
+  // Full replies for a thread are at /b/:board/:thread_id
   app.route('/api/replies/:board')
   
+  // works
   // GET
   .get(function(req, res) {
     // /api/replies/<board>?thread_id=<thread>
@@ -105,38 +106,28 @@ module.exports = function (app) {
     let thread = req.query.thread_id;
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
-        let dbo = db.db("fcc-cert6-project5");
-        if (dbo.collection(board)) {
-          let collection = dbo.collection(board);
-          collection.findOne({_id: ObjectId(thread)}, function(err, result) {
-            if (result) {
-              
-              collection.find({_id: ObjectId(thread)}).toArray(function(err, result) {
-                console.log(result);
-                // this is not hit by the UI, the client touches this api and gets result[0]
-                res.send(result[0]);
-                //res.redirect('/b/' + board + '/' + thread); 
-                //res.send({success: 'works'});
-              }) 
-              
-              /*
-              collection.find({_id: ObjectId(thread)}, function(err, result) {
-                console.log('works');
-                console.log(result);
-                res.json(result.body);
-              })
-              */
-            } else {
-              res.send({error: 'No thread under that id exists'});
-            }
-          });
-          //collection.find().toArray(function(err, result) {
-          //});
-        } else {
-          res.send({error: 'No board under that name exists'});
-        }
-      });
-    
+      let dbo = db.db("fcc-cert6-project5");
+      if (dbo.collection(board)) {
+        let collection = dbo.collection(board);
+        collection.findOne({_id: ObjectId(thread)}, function(err, result) {
+          if (result) {
+
+            collection.find({_id: ObjectId(thread)}).toArray(function(err, result) {
+              console.log(result);
+              // this is not shown by the UI, the client touches this api and gets result[0]
+              // then /views/thread.html shows this result
+              // result[0] b/c we use toArray during the find
+              res.send(result[0]);
+
+            }) 
+          } else {
+            res.send({error: 'No thread under that id exists'});
+          }
+        });
+      } else {
+        res.send({error: 'No board under that name exists'});
+      }
+    });
   })
   
   // POST
