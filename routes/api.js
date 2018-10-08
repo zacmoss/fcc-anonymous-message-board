@@ -100,7 +100,7 @@ module.exports = function (app) {
   // GET
   .get(function(req, res) {
     // /api/replies/<board>?thread_id=<thread>
-    // test url --- /api/replies/FF8?thread_id=5bb3a3b7e7c0260fcc5b17be
+    // test url --- /api/replies/FF8?thread_id=5bb3ceb5452cf407c2a13aa6
     let board = req.params.board;
     let thread = req.query.thread_id;
     
@@ -110,13 +110,15 @@ module.exports = function (app) {
           let collection = dbo.collection(board);
           collection.findOne({_id: ObjectId(thread)}, function(err, result) {
             if (result) {
-              /*
+              
               collection.find({_id: ObjectId(thread)}).toArray(function(err, result) {
                 console.log(result);
-                res.send(result);
+                // this is not hit by the UI, the client touches this api and gets result[0]
+                res.send(result[0]);
+                //res.redirect('/b/' + board + '/' + thread); 
                 //res.send({success: 'works'});
               }) 
-              */
+              
               /*
               collection.find({_id: ObjectId(thread)}, function(err, result) {
                 console.log('works');
