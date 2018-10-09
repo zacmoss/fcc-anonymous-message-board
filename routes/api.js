@@ -38,7 +38,7 @@ module.exports = function (app) {
         let dbo = db.db("fcc-cert6-project5");
         if (dbo.collection(messageBoard)) {
           let collection = dbo.collection(messageBoard);
-          collection.find().sort({"created_on": 1}).limit(10).toArray(function(err, result) {
+          collection.find().sort({"bumped_on": -1}).limit(10).toArray(function(err, result) {
             let newArray = []
             // iterate through result array
             // forEach, reduce replies array to 3
