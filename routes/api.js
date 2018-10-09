@@ -114,11 +114,25 @@ module.exports = function (app) {
     
   // PUT
   .put(function(req, res) {
+    console.log(req.body);
     let board = req.params.board;
     let thread = req.body.thread_id;
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
+      let collection = dbo.collection(board);
+      
+      collection.findOneAndUpdate(
+        {_id: ObjectId(thread)},
+        { $set: { bumped_on: new Date(), reported: true } },
+        function(err, result) {
+          if (result) {
+            res.send('success');
+          } else {
+            res.send('incorrect board or thread id');
+          }
+        }
+      );
       
     });
     
