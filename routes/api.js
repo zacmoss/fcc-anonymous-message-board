@@ -46,10 +46,10 @@ module.exports = function (app) {
             // res.send(newArray)
             result.forEach(function(ele) {
               if (ele.replycount > 3) {
-                console.log('reduce this one');
+                //console.log('reduce this one');
                 let reducedReplies = [ele.replies[0], ele.replies[1], ele.replies[2]]
                 let reducedEle = {
-                  id: ele._id,
+                  _id: ele._id,
                   text: ele.text,
                   delete_password: ele.delete_password,
                   created_on: ele.created_on,
@@ -63,7 +63,7 @@ module.exports = function (app) {
                 newArray.push(ele);
               }
             });
-            console.log(newArray);
+            //console.log(newArray);
             res.send(newArray);
         });
         } else {
@@ -113,6 +113,16 @@ module.exports = function (app) {
   })
     
   // PUT
+  .put(function(req, res) {
+    let board = req.params.board;
+    let thread = req.body.thread_id;
+    
+    MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
+      let dbo = db.db("fcc-cert6-project5");
+      
+    });
+    
+  })
   
   // DELETE
   // works
@@ -240,8 +250,10 @@ module.exports = function (app) {
   
   // PUT
   
-  // DELETE
   
+  
+  // DELETE
+  // works
   .delete(function(req, res) {
     console.log(req.body.thread_id);
     let board = req.params.board;
@@ -261,7 +273,7 @@ module.exports = function (app) {
           if (data) {
             collection.updateOne(
               { _id: ObjectId(thread) },
-              { $pull: { 'replies': { _id: ObjectId(reply_id) } }, $set: { bumped_on: new Date() } }
+              { $pull: { 'replies': { _id: ObjectId(reply_id) } }, $set: { bumped_on: new Date() }, $inc: { replycount: -1 } }
             );
             res.send('success');
           } else {
