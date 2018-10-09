@@ -272,14 +272,28 @@ module.exports = function (app) {
       let dbo = db.db("fcc-cert6-project5");
       let collection = dbo.collection(board);
       
+      collection.find({'replies._id': ObjectId(reply_id)}).toArray(function(err, result) {
+        let newArray = [];
+        
+        result[0].replies.forEach(function(ele) {
+          console.log(ele._id);
+          console.log(reply_id);
+          if (ele._id === reply_id) {
+            console.log('found it!');
+          }
+        })
+      });
+      
+      
+      
       collection.findOneAndUpdate(
         {'replies._id': ObjectId(reply_id)},
-        { $set: { 'reported: true } },
+        { $set: { 'reported': true } },
         function(err, result) {
           if (result) {
             res.send('success');
           } else {
-            res.send('incorrect board or thread id');
+            res.send('incorrect board, thread id, or reply id');
           }
         }
       );
