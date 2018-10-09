@@ -39,6 +39,10 @@ module.exports = function (app) {
         if (dbo.collection(messageBoard)) {
           let collection = dbo.collection(messageBoard);
           collection.find().limit(10).toArray(function(err, result) {
+          //collection.find({}, {"replies": 3}).limit(10).toArray(function(err, result) {
+            let newArray = []
+            // iterate through result array
+            // for 
             console.log(result);
             res.send(result);
         });
@@ -226,20 +230,18 @@ module.exports = function (app) {
       } else {
         let collection = dbo.collection(board);
         
-        
         collection.findOne({'replies._id': ObjectId(reply_id), delete_password: password}, function(err, data) {
+          
           if (data) {
             collection.updateOne(
               { _id: ObjectId(thread) },
               { $pull: { 'replies': { _id: ObjectId(reply_id) } } }
             );
             res.send('success');
-            //console.log(data);
           } else {
             res.send('incorrect password');
           }
-          //console.log(thread);
-          //console.log(data);
+          
         })
       }
     });
