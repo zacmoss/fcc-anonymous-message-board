@@ -276,27 +276,41 @@ module.exports = function (app) {
         let newArray = [];
         
         result[0].replies.forEach(function(ele) {
-          console.log(ele._id);
-          console.log(reply_id);
-          if (ele._id === reply_id) {
+          let a = ele._id.toString();
+          let b = reply_id.toString();
+          
+          if (a === b) {
             console.log('found it!');
+            let newReply = {
+              _id: ele._id,
+              text: ele.text,
+              delete_password: ele.delete_password,
+              created_on: ele.created_on,
+              reported: true
+            }
+            newArray.push(newReply);
+          } else {
+            newArray.push(ele);
           }
-        })
+        });
+        
+        collection.findOneAndUpdate(
+          {'replies._id': ObjectId(reply_id)},
+          { $set: { replies: newArray } },
+          function(err, result) {
+            if (result) {
+              res.send('success');
+            } else {
+              res.send('incorrect board, thread id, or reply id');
+            }
+          }
+        );
+        
       });
       
       
       
-      collection.findOneAndUpdate(
-        {'replies._id': ObjectId(reply_id)},
-        { $set: { 'reported': true } },
-        function(err, result) {
-          if (result) {
-            res.send('success');
-          } else {
-            res.send('incorrect board, thread id, or reply id');
-          }
-        }
-      );
+      
     });
   })
   
