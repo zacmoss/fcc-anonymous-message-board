@@ -91,6 +91,20 @@ module.exports = function (app) {
   // PUT
   
   // DELETE
+  
+  .delete(function(req, res) {
+    let board = req.params.board;
+    let thread = req.body.thread_id;
+    let password = req.body.delete_password;
+    
+    MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
+      let dbo = db.db("fcc-cert6-project5");
+      
+    });
+    
+  })
+  
+  
     
   
   // REPLIES
