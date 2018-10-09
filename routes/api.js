@@ -226,10 +226,10 @@ module.exports = function (app) {
       } else {
         let collection = dbo.collection(board);
         //collection.findOne({_id: ObjectId(thread)}, function(err, result) {
-        collection.find({ replies: { _id: ObjectId(reply_id) } }, {delete_password: 1}, function(err, result) {
+        collection.find({ replies: { _id: ObjectId(reply_id) } }).toArray(function(err, result) {
           if (result) {
             console.log('password entered: ' + password);
-            //console.log(result.text);
+            console.log(result[0]);
             //if (result.delete_password
             /*
             collection.updateOne(
