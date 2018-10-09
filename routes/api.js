@@ -225,60 +225,22 @@ module.exports = function (app) {
         res.send('No message board under that title');
       } else {
         let collection = dbo.collection(board);
-        /*let data = collection.find({_id: ObjectId(thread)},
-                           { replies: { $elemMatch: { _id: ObjectId(reply_id) } } }).limit(1);*/
         
-        collection.findOne({'replies._id': ObjectId(reply_id)},
-                           { replies: { $elemMatch: { delete_password: password } } },
-                           function(err, data) {
+        
+        collection.findOne({'replies._id': ObjectId(reply_id), delete_password: password}, function(err, data) {
           if (data) {
-            console.log('works');
-          } else {
-            console.log('wrong info');
-          }
-          //console.log(thread);
-          //console.log(data);
-        })
-        
-          
-                           /*function(err, result) {
-        //collection.findOne({ replies: { _id: ObjectId(reply_id) } }, function(err, result) {
-          
-          if (result) {
-            //console.log('password entered: ' + password);
-            //console.log(result.replies);
-            console.log(result);
-            
-            
-            //if (result.delete_password
-            /*
             collection.updateOne(
               { _id: ObjectId(thread) },
               { $pull: { 'replies': { _id: ObjectId(reply_id) } } }
             );
-            */
-            /*
-                        if (result.delete_password === password) {
-                          try {
-                            collection.deleteOne({_id: ObjectId(thread)});
-                            res.send('success');
-                          } catch (e) {
-                            console.log(e);
-                            res.text('thread not deleted.');
-                          }
-                        } else {
-                          res.send('password incorrect');
-                        }
-                        */
-            
-            // negatively iterate reply count as well
-                                   /*
+            res.send('success');
+            //console.log(data);
           } else {
-            console.log('password incorrect');
-            console.log(err);
-            res.send('No thread under that id or password incorrect');
+            res.send('incorrect password');
           }
-        })*/
+          //console.log(thread);
+          //console.log(data);
+        })
       }
     });
     
