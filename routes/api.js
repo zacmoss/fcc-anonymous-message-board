@@ -225,8 +225,10 @@ module.exports = function (app) {
         res.send('No message board under that title');
       } else {
         let collection = dbo.collection(board);
-        let data = collection.find({_id: ObjectId(thread)},
-                           { replies: { $elemMatch: { _id: ObjectId(reply_id) } } })
+        /*let data = collection.find({_id: ObjectId(thread)},
+                           { replies: { $elemMatch: { _id: ObjectId(reply_id) } } }).limit(1);*/
+        collection.findOne({_id: ObjectId(thread)});
+        console.log(thread);
         console.log(data);
                            /*function(err, result) {
         //collection.findOne({ replies: { _id: ObjectId(reply_id) } }, function(err, result) {
