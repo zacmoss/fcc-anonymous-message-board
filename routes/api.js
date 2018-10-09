@@ -225,11 +225,13 @@ module.exports = function (app) {
         res.send('No message board under that title');
       } else {
         let collection = dbo.collection(board);
-        //collection.findOne({_id: ObjectId(thread)}, function(err, result) {
-        collection.find({ replies: { _id: ObjectId(reply_id) } }).toArray(function(err, result) {
+        collection.findOne({_id: ObjectId(thread)}, function(err, result) {
+        //collection.findOne({ replies: { _id: ObjectId(reply_id) } }, function(err, result) {
+          
           if (result) {
             console.log('password entered: ' + password);
-            console.log(result[0]);
+            console.log(result.replies);
+            
             //if (result.delete_password
             /*
             collection.updateOne(
@@ -254,6 +256,7 @@ module.exports = function (app) {
             // negatively iterate reply count as well
           } else {
             console.log('password incorrect');
+            console.log(err);
             res.send('No thread under that id or password incorrect');
           }
         })
