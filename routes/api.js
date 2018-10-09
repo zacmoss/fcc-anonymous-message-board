@@ -42,9 +42,25 @@ module.exports = function (app) {
           //collection.find({}, {"replies": 3}).limit(10).toArray(function(err, result) {
             let newArray = []
             // iterate through result array
-            // for 
-            console.log(result);
-            res.send(result);
+            // forEach, reduce replies array to 3
+            // save as newArray
+            // res.send(newArray)
+            result.forEach(function(ele) {
+              if (ele.replycount > 3) {
+                console.log('reduce this one');
+                let reducedEle = {
+                  
+                }
+                newArray.push({key: 'value'});
+              } else {
+                newArray.push(ele);
+              }
+              //console.log(ele.replycount);
+              //console.log(ele.replies);
+            });
+            console.log(newArray);
+            //console.log(result);
+            //res.send(result);
         });
         } else {
           res.send({error: 'No board under that name exists'});
