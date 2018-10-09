@@ -16,11 +16,20 @@
     
     <div id='submitNewThread'>
       <h3>Submit a new thread:</h3>
-      <form id="newThread" method="post" action="/api/threads/test">
+      
+      <form id="newThread" method="post" action="/api/">
         <textarea rows="8" cols="120" type='text' placeholder='Thread text...' name='text' required=''></textarea><br>
         <input type='text' placeholder='password to delete' name='delete_password' required=''><br>
         <input type="submit" value="Submit">
       </form>
+      
+      <!--
+      <form action="/api/threads/test" method="post" id="newThread">
+        <textarea rows="8" cols="120" type='text' placeholder='Thread text...' name='text' required=''></textarea><br>
+        <input type='text' placeholder='password to delete' name='delete_password' required=''><br>
+        <input type="submit" value="Submit">
+      </form>
+      -->
     </div>
     
     <div id='boardDisplay'></div>
@@ -82,9 +91,17 @@
           }
         });
         
+        
         $('#newThread').submit(function(){
           $(this).attr('action', "/api/threads/" + currentBoard);
         });
+        
+        /*
+        $('#newThread').submit(function(){
+          //var board = $('#board1').val();
+          $(this).attr('action', "/api/threads/" + currentBoard);
+        });
+        */
         
         $('#boardDisplay').on('submit','#reportThread', function(e) {
           var url = "/api/threads/"+currentBoard;

@@ -81,8 +81,9 @@ module.exports = function (app) {
   
   // works
   .post(function(req, res) {
-    let messageBoard = req.params.board;
-    let board = req.body.board;
+    console.log(req.body);
+    let board = req.params.board;
+    //let board = req.body.board;
     let text = req.body.text;
     let delete_password = req.body.delete_password;
     // thread object
