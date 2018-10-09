@@ -229,8 +229,25 @@ module.exports = function (app) {
         //collection.findOne({ replies: { _id: ObjectId(reply_id) } }, function(err, result) {
           
           if (result) {
-            console.log('password entered: ' + password);
-            console.log(result.replies);
+            //console.log('password entered: ' + password);
+            //console.log(result.replies);
+            
+            // iterate through replies array
+            result.replies.forEach(function (reply) {
+              let id = ObjectId(reply_id);              
+              
+              if (ObjectId(reply._id) == ObjectId(reply_id)) {
+                if (reply.delete_password === password) {
+                  console.log('deleted here');
+                } else {
+                  console.log('incorrect password');
+                }
+              } else {
+                console.log(id);
+                console.log(reply._id);
+                console.log('no reply under that id');
+              }
+            });
             
             //if (result.delete_password
             /*
