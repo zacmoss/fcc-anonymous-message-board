@@ -48,10 +48,18 @@ module.exports = function (app) {
             result.forEach(function(ele) {
               if (ele.replycount > 3) {
                 console.log('reduce this one');
+                let reducedReplies = [ele.replies[0], ele.replies[1], ele.replies[2]]
                 let reducedEle = {
-                  
+                  id: ele._id,
+                  text: ele.text,
+                  delete_password: ele.delete_password,
+                  created_on: ele.created_on,
+                  bumped_on: ele.bumped_on,
+                  reported: ele.reported,
+                  replies: reducedReplies,
+                  replycount: ele.replycount
                 }
-                newArray.push({key: 'value'});
+                newArray.push(reducedEle);
               } else {
                 newArray.push(ele);
               }
@@ -59,6 +67,7 @@ module.exports = function (app) {
               //console.log(ele.replies);
             });
             console.log(newArray);
+            res.send(newArray);
             //console.log(result);
             //res.send(result);
         });
