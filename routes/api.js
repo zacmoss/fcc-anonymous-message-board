@@ -220,10 +220,11 @@ module.exports = function (app) {
             {_id: ObjectId(thread)},
             { $addToSet: {replies: dataObject}, $inc: {replycount: 1}, $set: {bumped_on: new Date()} },
             function(err, result) {
-              //res.send(result);
+              /* tests that bumped_on was changed for thread
               collection.findOne({_id: ObjectId(thread)}, function(err, result) {
                 console.log(result);
               });
+              */
               res.redirect('/b/' + board + '/' + thread);
             }
           );
@@ -242,6 +243,7 @@ module.exports = function (app) {
   // DELETE
   
   .delete(function(req, res) {
+    console.log(req.body.thread_id);
     let board = req.params.board;
     let thread = req.body.thread_id;
     let reply_id = req.body.reply_id;
@@ -259,7 +261,7 @@ module.exports = function (app) {
           if (data) {
             collection.updateOne(
               { _id: ObjectId(thread) },
-              { $pull: { 'replies': { _id: ObjectId(reply_id) } } }
+              { $pull: { 'replies': { _id: ObjectId(reply_id) } }, $set: { bumped_on: new Date() } }
             );
             res.send('success');
           } else {
