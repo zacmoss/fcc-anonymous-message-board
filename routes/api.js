@@ -225,29 +225,17 @@ module.exports = function (app) {
         res.send('No message board under that title');
       } else {
         let collection = dbo.collection(board);
-        collection.findOne({_id: ObjectId(thread)}, function(err, result) {
+        let data = collection.find({_id: ObjectId(thread)},
+                           { replies: { $elemMatch: { _id: ObjectId(reply_id) } } })
+        console.log(data);
+                           /*function(err, result) {
         //collection.findOne({ replies: { _id: ObjectId(reply_id) } }, function(err, result) {
           
           if (result) {
             //console.log('password entered: ' + password);
             //console.log(result.replies);
+            console.log(result);
             
-            // iterate through replies array
-            result.replies.forEach(function (reply) {
-              let id = ObjectId(reply_id);              
-              
-              if (ObjectId(reply._id) == ObjectId(reply_id)) {
-                if (reply.delete_password === password) {
-                  console.log('deleted here');
-                } else {
-                  console.log('incorrect password');
-                }
-              } else {
-                console.log(id);
-                console.log(reply._id);
-                console.log('no reply under that id');
-              }
-            });
             
             //if (result.delete_password
             /*
@@ -271,12 +259,13 @@ module.exports = function (app) {
                         */
             
             // negatively iterate reply count as well
+                                   /*
           } else {
             console.log('password incorrect');
             console.log(err);
             res.send('No thread under that id or password incorrect');
           }
-        })
+        })*/
       }
     });
     
