@@ -99,7 +99,31 @@ module.exports = function (app) {
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
-      
+      if (!dbo.collection(board)) {
+        res.text('No message board under that title');
+      } else {
+        let collection = dbo.collection(board);
+        collection.findOne({_id: ObjectId(thread)}, function(err, result) {
+          if (result) {
+            //console.log(result.delete_password);
+            //res.json(result);
+            if (result.delete_password === password) {
+              //console.log('password matches');
+              try {
+                collection.deleteOne({_id: ObjectId(thread)});
+                res.text('delete successful');
+              } catch (e) {
+                console.log(e);
+                res.text('thread not deleted.');
+              }
+            } else {
+              //console.log("password doesn't match");
+            }
+          } else {
+            res.text('No thread under that id');
+          }
+        })
+      }
     });
     
   })
