@@ -39,7 +39,6 @@ module.exports = function (app) {
         if (dbo.collection(messageBoard)) {
           let collection = dbo.collection(messageBoard);
           collection.find().limit(10).toArray(function(err, result) {
-          //collection.find({}, {"replies": 3}).limit(10).toArray(function(err, result) {
             let newArray = []
             // iterate through result array
             // forEach, reduce replies array to 3
@@ -63,13 +62,9 @@ module.exports = function (app) {
               } else {
                 newArray.push(ele);
               }
-              //console.log(ele.replycount);
-              //console.log(ele.replies);
             });
             console.log(newArray);
             res.send(newArray);
-            //console.log(result);
-            //res.send(result);
         });
         } else {
           res.send({error: 'No board under that name exists'});
@@ -220,11 +215,15 @@ module.exports = function (app) {
         collection.findOne({_id: ObjectId(thread)}, function(err, result) {
           
           if (result) {
+            
           collection.findOneAndUpdate(
             {_id: ObjectId(thread)},
-            { $addToSet: {replies: dataObject}, $inc: {replycount: 1} },
+            { $addToSet: {replies: dataObject}, $inc: {replycount: 1}, $set: {bumped_on: new Date()} },
             function(err, result) {
               //res.send(result);
+              collection.findOne({_id: ObjectId(thread)}, function(err, result) {
+                console.log(result);
+              });
               res.redirect('/b/' + board + '/' + thread);
             }
           );
