@@ -227,15 +227,19 @@ module.exports = function (app) {
         let collection = dbo.collection(board);
         /*let data = collection.find({_id: ObjectId(thread)},
                            { replies: { $elemMatch: { _id: ObjectId(reply_id) } } }).limit(1);*/
-        /*
-        collection.findOne({'replies._id': ObjectId(reply_id)}, function(err, data) {
-          console.log(thread);
-          console.log(data);
+        
+        collection.findOne({'replies._id': ObjectId(reply_id)},
+                           { replies: { $elemMatch: { delete_password: password } } },
+                           function(err, data) {
+          if (data) {
+            console.log('works');
+          } else {
+            console.log('wrong info');
+          }
+          //console.log(thread);
+          //console.log(data);
         })
-        */
-        let data = collection.find({'replies._id': ObjectId(reply_id)});
-        data.hasNext();
-        condata.next();
+        
           
                            /*function(err, result) {
         //collection.findOne({ replies: { _id: ObjectId(reply_id) } }, function(err, result) {
