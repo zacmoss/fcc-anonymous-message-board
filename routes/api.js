@@ -114,9 +114,8 @@ module.exports = function (app) {
     
   // PUT
   .put(function(req, res) {
-    console.log(req.body);
     let board = req.params.board;
-    let thread = req.body.thread_id;
+    let thread = req.body.report_id;
     
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
@@ -263,6 +262,35 @@ module.exports = function (app) {
   })
   
   // PUT
+  
+  .put(function(req, res) {
+    let board = req.params.board;
+    let thread = req.body.thread_id;
+    let reply_id = req.body.reply_id;
+    
+    MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
+      let dbo = db.db("fcc-cert6-project5");
+      let collection = dbo.collection(board);
+      
+      collection.findOneAndUpdate(
+        {'replies._id': ObjectId(reply_id)},
+        { $set: { 'reported: true } },
+        function(err, result) {
+          if (result) {
+            res.send('success');
+          } else {
+            res.send('incorrect board or thread id');
+          }
+        }
+      );
+    });
+  })
+  
+  
+  
+  
+  
+  
   
   
   
