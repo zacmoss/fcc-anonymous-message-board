@@ -91,7 +91,7 @@ module.exports = function (app) {
   // PUT
   
   // DELETE
-  
+  // works
   .delete(function(req, res) {
     let board = req.params.board;
     let thread = req.body.thread_id;
@@ -100,27 +100,24 @@ module.exports = function (app) {
     MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
       let dbo = db.db("fcc-cert6-project5");
       if (!dbo.collection(board)) {
-        res.text('No message board under that title');
+        res.send('No message board under that title');
       } else {
         let collection = dbo.collection(board);
         collection.findOne({_id: ObjectId(thread)}, function(err, result) {
           if (result) {
-            //console.log(result.delete_password);
-            //res.json(result);
             if (result.delete_password === password) {
-              //console.log('password matches');
               try {
                 collection.deleteOne({_id: ObjectId(thread)});
-                res.text('delete successful');
+                res.send('success');
               } catch (e) {
                 console.log(e);
                 res.text('thread not deleted.');
               }
             } else {
-              //console.log("password doesn't match");
+              res.send('password incorrect');
             }
           } else {
-            res.text('No thread under that id');
+            res.send('No thread under that id');
           }
         })
       }
@@ -214,6 +211,41 @@ module.exports = function (app) {
   // PUT
   
   // DELETE
+  
+  .delete(function(req, res) {
+    let board = req.params.board;
+    let thread = req.body.thread_id;
+    let reply_id = req.body.reply_id;
+    let password = req.body.delete_password;
+    
+    MongoClient.connect(CONNECTION_STRING, { useNewUrlParser: true }, function(err, db) {
+      let dbo = db.db("fcc-cert6-project5");
+      if (!dbo.collection(board)) {
+        res.send('No message board under that title');
+      } else {
+        let collection = dbo.collection(board);
+        collection.findOne({_id: ObjectId(thread)}, function(err, result) {
+          if (result) {
+            collection.find
+                        if (result.delete_password === password) {
+                          try {
+                            collection.deleteOne({_id: ObjectId(thread)});
+                            res.send('success');
+                          } catch (e) {
+                            console.log(e);
+                            res.text('thread not deleted.');
+                          }
+                        } else {
+                          res.send('password incorrect');
+                        }
+          } else {
+            res.send('No thread under that id');
+          }
+        })
+      }
+    });
+    
+  })
   
 
 };
