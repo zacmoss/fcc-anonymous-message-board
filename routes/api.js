@@ -174,6 +174,7 @@ module.exports = function (app) {
     let delete_password = req.body.delete_password;
     
     let dataObject = {
+      _id: new ObjectId(),
       text: text,
       delete_password: delete_password,
       created_on: new Date(),
@@ -226,7 +227,11 @@ module.exports = function (app) {
         let collection = dbo.collection(board);
         collection.findOne({_id: ObjectId(thread)}, function(err, result) {
           if (result) {
-            collection.find
+            collection.update(
+              { _id: ObjectId(thread) },
+              { $pull: { 'replies': { _id: ObjectId(reply_id) } } }
+            );
+            /*
                         if (result.delete_password === password) {
                           try {
                             collection.deleteOne({_id: ObjectId(thread)});
@@ -238,6 +243,7 @@ module.exports = function (app) {
                         } else {
                           res.send('password incorrect');
                         }
+                        */
           } else {
             res.send('No thread under that id');
           }
