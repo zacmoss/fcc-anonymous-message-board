@@ -156,20 +156,20 @@ suite('Functional Tests', function() {
         .query({thread_id: testThreadIdForReplies})
         .end(function(err, res){
           assert.equal(res.status, 200);
-          //console.log(testThreadIdForReplies);
           console.log(res.body);
-         /*
-          assert.isArray(res.body, 'response should be an array');
-          assert.property(res.body[0], '_id', 'first item in array should contain id');
-          assert.property(res.body[0], 'text', 'first item in array should contain text');
-          assert.property(res.body[0], 'delete_password', 'first item in array should contain delete_password');
-          assert.property(res.body[0], 'created_on', 'first item in array should contain created_on');
-          assert.property(res.body[0], 'bumped_on', 'first item in array should contain bumped_on');
-          assert.property(res.body[0], 'reported', 'first item in array should contain reported');
-          assert.property(res.body[0], 'replies', 'first item in array should contain replies');
-          assert.property(res.body[0], 'replycount', 'first item in array should contain replycount');
-          assert.isArray(res.body[0].replies, 'replies should be an array');
-          */
+          testReplyId = res.body.replies[0]._id;
+          testReplyDeletePassword = res.body.replies[0].delete_password;
+          assert.property(res.body, '_id', 'first item in array should contain id');
+          assert.property(res.body, 'text', 'first item in array should contain text');
+          assert.property(res.body, 'delete_password', 'first item in array should contain delete_password');
+          assert.property(res.body, 'created_on', 'first item in array should contain created_on');
+          assert.property(res.body, 'bumped_on', 'first item in array should contain bumped_on');
+          assert.property(res.body, 'reported', 'first item in array should contain reported');
+          assert.property(res.body, 'replies', 'first item in array should contain replies');
+          assert.property(res.body, 'replycount', 'first item in array should contain replycount');
+          assert.isArray(res.body.replies, 'replies should be an array');
+          assert.isAbove(res.body.replies.length, 0);
+          
           done();
         });
       });
@@ -177,6 +177,18 @@ suite('Functional Tests', function() {
     });
     
     suite('PUT', function() {
+      
+      test('Report a reply', function(done) {
+       chai.request(server)
+        .put('/api/replies/test')
+        .send({ thread_id: testThreadId, reply_id: testReplyId })
+        .end(function(err, res){
+          //console.log(res.body);
+          assert.equal(res.status, 200);
+          assert.equal(res.text, 'success');
+          done();
+        });
+      });
       
     });
     
