@@ -23,12 +23,7 @@ suite('Functional Tests', function() {
        chai.request(server)
         .post('/api/threads/test')
         .send({text: 'This is a test thread',
-               delete_password: 'password',
-               created_on: new Date(),
-               bumped_on: new Date(),
-               reported: false,
-               replies: [],
-               replycount: 0
+               delete_password: 'password'
               })
         .end(function(err, res){
           console.log(res.body);
@@ -55,12 +50,12 @@ suite('Functional Tests', function() {
       
       test('Get a board of threads', function(done) {
        chai.request(server)
-        .get('/api/threads/general')
+        .get('/api/threads/test')
         //.query({stock: 'goog'})
         .end(function(err, res){
           //console.log(res.body);
           assert.equal(res.status, 200);
-         
+          
           assert.isArray(res.body, 'response should be an array');
           assert.property(res.body[0], '_id', 'first item in array should contain id');
           assert.property(res.body[0], 'text', 'first item in array should contain text');
@@ -79,6 +74,17 @@ suite('Functional Tests', function() {
     });
     
     suite('DELETE', function() {
+      
+      test('Get a board of threads', function(done) {
+       chai.request(server)
+        .delete('/api/threads/test')
+        .send({thread_id: 
+        .end(function(err, res){
+          //console.log(res.body);
+          assert.equal(res.status, 200);
+          done();
+        });
+      });
       
     });
     
