@@ -125,6 +125,8 @@ suite('Functional Tests', function() {
         .end(function(err, res){
           assert.equal(res.status, 200);
           let lastThread = res.body.length - 1;
+          //console.log('test');
+          //console.log(lastThread);
           testThreadIdForReplies = res.body[lastThread]._id;
           testDeletePassword = res.body[lastThread].delete_password;
           done();
@@ -148,15 +150,15 @@ suite('Functional Tests', function() {
     
     suite('GET', function() {
       
-      test('Get a board of threads', function(done) {
+      test('Get a thread with replies', function(done) {
        chai.request(server)
-        .get('/api/threads/test')
+        .get('/api/replies/test')
+        .query({thread_id: testThreadIdForReplies})
         .end(function(err, res){
-          //console.log(res.body);
           assert.equal(res.status, 200);
-          testThreadId = res.body[0]._id;
-          testDeletePassword = res.body[0].delete_password;
-          console.log(testThreadId);
+          //console.log(testThreadIdForReplies);
+          console.log(res.body);
+         /*
           assert.isArray(res.body, 'response should be an array');
           assert.property(res.body[0], '_id', 'first item in array should contain id');
           assert.property(res.body[0], 'text', 'first item in array should contain text');
@@ -167,7 +169,7 @@ suite('Functional Tests', function() {
           assert.property(res.body[0], 'replies', 'first item in array should contain replies');
           assert.property(res.body[0], 'replycount', 'first item in array should contain replycount');
           assert.isArray(res.body[0].replies, 'replies should be an array');
-          
+          */
           done();
         });
       });
