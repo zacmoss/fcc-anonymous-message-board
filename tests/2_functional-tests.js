@@ -194,12 +194,11 @@ suite('Functional Tests', function() {
     
     suite('DELETE', function() {
       
-      test('Delete a thread', function(done) {
+      test('Delete a reply', function(done) {
        chai.request(server)
-        .delete('/api/threads/test')
-        .send({thread_id: testThreadId, delete_password: testDeletePassword})
+        .delete('/api/replies/test')
+        .send({thread_id: testThreadId, reply_id: testReplyId, delete_password: testDeletePassword})
         .end(function(err, res){
-          //console.log(res.body);
           assert.equal(res.status, 200);
           assert.equal(res.text, 'success');
           done();

@@ -8,12 +8,25 @@
 
 'use strict';
 
+// NOTES
+
 // notes req.params.board is cutting off last letter...why???
 // solved: board.html grabs board by slicing url and cuts last item assuming it a /
 // so we had to add a / on the redirect to the server on post
 
-// above incorrect, I believe database must be three deep now
-// board -> thread array -> replies array in each thread
+// /b/:board/:threadid --> /views/thread.html --> hits /api/replies/<board> --> displays results
+
+// For add reply on thread at /b/board/thread, the POST is on form at submit
+
+// To limit replies shown, we iterate through result returned on collection.find
+//and create newArray with only 3 replies and res.send that newArray.
+
+// Converted _ids to strings to match them for change to reply arrays
+
+// To report replies we iterate through replies array, find reply_id that matches, create new
+//newArray
+
+
 
 const expect = require('chai').expect;
 const MongoClient = require('mongodb').MongoClient;
