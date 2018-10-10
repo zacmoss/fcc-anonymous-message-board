@@ -23,8 +23,8 @@
 
 // Converted _ids to strings to match them for change to reply arrays
 
-// To report replies we iterate through replies array, find reply_id that matches, create new
-//newArray
+// To report replies we iterate through replies array, find reply_id that matches, create
+//newArray, push in originals unchanged, and push updated reply with reported = true
 
 
 
