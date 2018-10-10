@@ -19,6 +19,19 @@ suite('Functional Tests', function() {
     
     suite('POST', function() {
       
+      test('Post new thread', function(done) {
+       chai.request(server)
+        .get('/api/threads/general')
+        //.query({stock: 'goog'})
+        .end(function(err, res){
+          console.log(res.body);
+          //assert.equal(res.status, 200);
+          //assert.equal(res.body.stock, 'goog');
+          //assert.property(res.body, 'price', 'stockData should contain price');
+          done();
+        });
+      });
+      
     });
     
     suite('GET', function() {
