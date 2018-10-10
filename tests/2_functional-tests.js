@@ -14,6 +14,7 @@ var server = require('../server');
 chai.use(chaiHttp);
 let testThreadId;
 let testDeletePassword;
+let testThreadIdForReplies;
 let testReplyId;
 let testReplyDeletePassword;
 suite('Functional Tests', function() {
@@ -29,20 +30,9 @@ suite('Functional Tests', function() {
                delete_password: 'password'
               })
         .end(function(err, res){
-          console.log(res.body);
+          //console.log(res.body);
           assert.equal(res.status, 200);
-         /*
-          assert.isArray(res.body, 'response should be an array');
-          assert.property(res.body[0], '_id', 'first item in array should contain id');
-          assert.property(res.body[0], 'text', 'first item in array should contain text');
-          assert.property(res.body[0], 'delete_password', 'first item in array should contain delete_password');
-          assert.property(res.body[0], 'created_on', 'first item in array should contain created_on');
-          assert.property(res.body[0], 'bumped_on', 'first item in array should contain bumped_on');
-          assert.property(res.body[0], 'reported', 'first item in array should contain reported');
-          assert.property(res.body[0], 'replies', 'first item in array should contain replies');
-          assert.property(res.body[0], 'replycount', 'first item in array should contain replycount');
-          assert.isArray(res.body[0].replies, 'replies should be an array');
-          */
+          // user is redirected, so not sure how to test other than 200 response
           done();
         });
       });
@@ -78,6 +68,22 @@ suite('Functional Tests', function() {
       
     });
     
+    suite('PUT', function() {
+      
+      test('Report a thread', function(done) {
+       chai.request(server)
+        .put('/api/threads/test')
+        .send({ report_id: testThreadId })
+        .end(function(err, res){
+          //console.log(res.body);
+          assert.equal(res.status, 200);
+          assert.equal(res.text, 'success');
+          done();
+        });
+      });
+      
+    });
+    
     suite('DELETE', function() {
       
       test('Delete a thread', function(done) {
@@ -87,21 +93,7 @@ suite('Functional Tests', function() {
         .end(function(err, res){
           //console.log(res.body);
           assert.equal(res.status, 200);
-          done();
-        });
-      });
-      
-    });
-    
-    suite('PUT', function() {
-      
-      test('Report a thread', function(done) {
-       chai.request(server)
-        .put('/api/threads/test')
-        .send({thread_id: testThreadId, delete_password: testDeletePassword})
-        .end(function(err, res){
-          //console.log(res.body);
-          assert.equal(res.status, 200);
+          assert.equal(res.text, 'success');
           done();
         });
       });
@@ -114,6 +106,42 @@ suite('Functional Tests', function() {
   suite('API ROUTING FOR /api/replies/:board', function() {
     
     suite('POST', function() {
+      
+      test('Posting new thread for reply testing', function(done) {
+        chai.request(server)
+        .post('/api/threads/test')
+        .send({text: 'This is a test thread for replies', delete_password: 'password'})
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          done();
+        });
+      });
+      
+      test('Get a thread for reply test posting', function(done) {
+       chai.request(server)
+        .get('/api/threads/test')
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          let lastThread = res.body.length - 1;
+          testThreadId = res.body[lastThread]._id;
+          testDeletePassword = res.body[0].delete_password;
+          done();
+        });
+      });
+      
+      test('Post new reply to thread', function(done) {
+       chai.request(server)
+        .post('/api/replies/test')
+        .send({text: 'This is a test thread',
+               delete_password: 'password'
+              })
+        .end(function(err, res){
+          //console.log(res.body);
+          assert.equal(res.status, 200);
+          // user is redirected, so not sure how to test other than 200 response
+          done();
+        });
+      });
       
     });
     
