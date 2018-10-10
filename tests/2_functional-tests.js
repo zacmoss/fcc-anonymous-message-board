@@ -12,7 +12,10 @@ var assert = chai.assert;
 var server = require('../server');
 
 chai.use(chaiHttp);
-
+let testThreadId;
+let testDeletePassword;
+let testReplyId;
+let testReplyDeletePassword;
 suite('Functional Tests', function() {
 
   suite('API ROUTING FOR /api/threads/:board', function() {
@@ -55,7 +58,9 @@ suite('Functional Tests', function() {
         .end(function(err, res){
           //console.log(res.body);
           assert.equal(res.status, 200);
-          
+          testThreadId = res.body[0]._id;
+          testDeletePassword = res.body[0].delete_password;
+          console.log(testThreadId);
           assert.isArray(res.body, 'response should be an array');
           assert.property(res.body[0], '_id', 'first item in array should contain id');
           assert.property(res.body[0], 'text', 'first item in array should contain text');
@@ -75,10 +80,10 @@ suite('Functional Tests', function() {
     
     suite('DELETE', function() {
       
-      test('Get a board of threads', function(done) {
+      test('Delete a thread', function(done) {
        chai.request(server)
         .delete('/api/threads/test')
-        .send({thread_id: 
+        .send({thread_id: testThreadId, delete_password: testDeletePassword})
         .end(function(err, res){
           //console.log(res.body);
           assert.equal(res.status, 200);
@@ -89,6 +94,17 @@ suite('Functional Tests', function() {
     });
     
     suite('PUT', function() {
+      
+      test('Report a thread', function(done) {
+       chai.request(server)
+        .put('/api/threads/test')
+        .send({thread_id: testThreadId, delete_password: testDeletePassword})
+        .end(function(err, res){
+          //console.log(res.body);
+          assert.equal(res.status, 200);
+          done();
+        });
+      });
       
     });
     
